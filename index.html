@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        .suggestion-box {
+            position: absolute;
+            border: 1px solid #ccc;
+            background-color: #fff;
+            display: none;
+            max-height: 150px;
+            overflow-y: auto;
+            width: calc(100% - 2px); 
+            z-index: 10;
+        }
+        .suggestion-item {
+            padding: 8px;
+            cursor: pointer;
+        }
+        .suggestion-item:hover {
+            background-color: #ddd;
+        }
+        .message-box {
+            margin-top: 10px;
+            color: red;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="navbar">
+                <div class="logo">
+                    <img src="logo.png" width="125px" alt="Logo">
+                </div>
+                <nav>
+                    <ul id="menuitems">
+                        <h1 style="margin-right: 50px;"><a style="color: rgb(116, 37, 37);">Welcome!</a></h1>
+                    </ul>
+                </nav>
+            </div>
+            <div class="row">
+                <div class="col-2">
+                    <h1>Welcome To Our Page.....<br>Give Your Workout<br>A New Style!!!</h1>
+                    <p>Success isn't always about greatness. It's about consistency. Consistent <br>hard work gains success. Greatness will come.</p>
+                    <a class="btn" href="#">Login To Join Us !!!!>>></a>
+                </div>
+                <div class="col-2">
+                    <div class="form-container" id="loginForm">
+                        <div class="form">
+                            <span class="close-btn"><a href="#">&#10005;</a></span>
+                            <h2>Login</h2>
+                            <form action="log.html" method="get">
+                                <div style="position: relative;">
+                                    <input type="email" id="emailInput" name="email" placeholder="Enter E-Mail" class="one" required>
+                                    <div id="suggestionBox" class="suggestion-box"></div>
+                                </div>
+                                <input type="password" name="password" placeholder="Password" class="two" required>
+                                <button type="submit" class="three">Login</button>
+                            </form>
+                            
+                            <div id="messageBox" class="message-box">Please fill out the form</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>  
+    </header>
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="footer-col-1">
+                    <h3>Download Our App</h3>
+                    <p>Download the app for Android and iOS mobile phones.</p>
+                    <div class="app-logo">
+                        <img src="play-store.png" alt="Play Store">
+                        <img src="app-store.png" alt="App Store">
+                    </div>
+                </div>
+                <div class="footer-col-2">
+                    <img src="logo-white.png" alt="Logo White">
+                    <p>Our purpose is to sustainably make the pleasure and benefits of sports accessible to many.</p>
+                </div>
+                <div class="footer-col-3">
+                    <h3>Useful Links</h3>
+                    <ul>
+                        <li><a href="#">Coupons</a></li>
+                        <li><a href="#">Blog Post</a></li>
+                        <li><a href="#">Return Policy</a></li>
+                        <li><a href="#">Join Affiliate</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col-4">
+                    <h3>Follow Us</h3>
+                    <ul>
+                        <li><a href="#">Facebook</a></li>
+                        <li><a href="#">Twitter</a></li>
+                        <li><a href="#">Instagram</a></li>
+                        <li><a href="#">YouTube</a></li>
+                    </ul>
+                </div>
+            </div>
+            <hr>
+            <p class="copyright">Copyright 2023</p>
+        </div>
+    </footer>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const emailInput = document.getElementById('emailInput');
+            const passwordInput = document.querySelector('input[name="password"]');
+            const suggestionBox = document.getElementById('suggestionBox');
+            const messageBox = document.getElementById('messageBox');
+            
+            emailInput.addEventListener('input', function() {
+                updateMessage();
+                const inputValue = emailInput.value;
+                suggestionBox.innerHTML = ''; 
+                
+                if (inputValue.includes('@')) {
+                    const domain = inputValue.split('@')[1];
+                    const suggestions = getSuggestions(domain);
+                    
+                    if (suggestions.length > 0) {
+                        suggestionBox.style.display = 'block';
+                        suggestions.forEach(suggestion => {
+                            const div = document.createElement('div');
+                            div.className = 'suggestion-item';
+                            div.textContent = suggestion;
+                            div.addEventListener('click', function() {
+                                emailInput.value = suggestion;
+                                suggestionBox.style.display = 'none';
+                                updateMessage();
+                            });
+                            suggestionBox.appendChild(div);
+                        });
+                    } else {
+                        suggestionBox.style.display = 'none';
+                    }
+                } else {
+                    suggestionBox.style.display = 'none';
+                }
+            });
+
+            emailInput.addEventListener('blur', function() {
+                setTimeout(() => {
+                    suggestionBox.style.display = 'none';
+                }, 100);
+            });
+
+            passwordInput.addEventListener('input', function() {
+                updateMessage();
+            });
+
+            function updateMessage() {
+                if (!emailInput.value || !passwordInput.value) {
+                    messageBox.style.display = 'block';
+                } else {
+                    messageBox.style.display = 'none';
+                }
+            }
+
+            function getSuggestions(domain) {
+                const allDomains = ['example.com', 'test.com', 'demo.com'];
+                return allDomains
+                    .filter(d => d.startsWith(domain))
+                    .map(d => `user@${d}`);
+            }
+        });
+        <!-- fire base-->
+        
+    </script>
+</body>
+</html>
